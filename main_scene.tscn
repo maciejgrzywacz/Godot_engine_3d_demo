@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=43 format=2]
 
 [ext_resource path="res://rug/Carpet.tscn" type="PackedScene" id=1]
 [ext_resource path="res://chair/DiningChair.tscn" type="PackedScene" id=2]
@@ -14,23 +14,27 @@
 [ext_resource path="res://window/windows.png" type="Texture" id=12]
 [ext_resource path="res://window/window2_3x2.obj" type="ArrayMesh" id=13]
 [ext_resource path="res://lamp/Lamp.tscn" type="PackedScene" id=14]
+[ext_resource path="res://MarginContainer.gd" type="Script" id=15]
+[ext_resource path="res://Control.gd" type="Script" id=16]
+[ext_resource path="res://Camera.gd" type="Script" id=17]
+[ext_resource path="res://DirectionalLight.gd" type="Script" id=18]
 
-[sub_resource type="ProceduralSky" id=12]
+[sub_resource type="ProceduralSky" id=1]
 sky_top_color = Color( 0.192157, 0.301961, 0.47451, 1 )
 sky_horizon_color = Color( 0.737255, 0.811765, 0.929412, 1 )
 
-[sub_resource type="Environment" id=13]
+[sub_resource type="Environment" id=2]
 background_mode = 2
-background_sky = SubResource( 12 )
-
-[sub_resource type="PlaneMesh" id=1]
-
-[sub_resource type="SpatialMaterial" id=2]
-albedo_texture = ExtResource( 5 )
+background_sky = SubResource( 1 )
 
 [sub_resource type="PlaneMesh" id=3]
 
 [sub_resource type="SpatialMaterial" id=4]
+albedo_texture = ExtResource( 5 )
+
+[sub_resource type="PlaneMesh" id=5]
+
+[sub_resource type="SpatialMaterial" id=6]
 albedo_texture = ExtResource( 6 )
 normal_enabled = true
 normal_scale = 1.0
@@ -41,14 +45,14 @@ ao_texture = ExtResource( 7 )
 ao_on_uv2 = false
 ao_texture_channel = 0
 
-[sub_resource type="PlaneMesh" id=5]
+[sub_resource type="PlaneMesh" id=7]
 
 [sub_resource type="SpatialMaterial" id=8]
 albedo_texture = ExtResource( 10 )
 
-[sub_resource type="PlaneMesh" id=6]
+[sub_resource type="PlaneMesh" id=9]
 
-[sub_resource type="SpatialMaterial" id=7]
+[sub_resource type="SpatialMaterial" id=10]
 albedo_texture = ExtResource( 6 )
 normal_enabled = true
 normal_scale = 1.0
@@ -59,12 +63,84 @@ ao_texture = ExtResource( 7 )
 ao_on_uv2 = true
 ao_texture_channel = 0
 
-[sub_resource type="CubeMesh" id=9]
+[sub_resource type="CubeMesh" id=11]
 
-[sub_resource type="SpatialMaterial" id=10]
+[sub_resource type="SpatialMaterial" id=12]
 
-[sub_resource type="SpatialMaterial" id=11]
+[sub_resource type="VisualShaderNodeColorUniform" id=13]
+output_port_for_preview = 1
+uniform_name = "ColorUniform"
+
+[sub_resource type="VisualShader" id=14]
+code = "shader_type spatial;
+render_mode specular_schlick_ggx;
+
+uniform vec4 ColorUniform : hint_color;
+
+
+
+void vertex() {
+// Output:0
+
+}
+
+void fragment() {
+// ColorUniform:2
+	vec3 n_out2p0 = ColorUniform.rgb;
+	float n_out2p1 = ColorUniform.a;
+
+// Output:0
+	ALPHA = n_out2p1;
+
+}
+
+void light() {
+// Output:0
+
+}
+"
+graph_offset = Vector2( 0, 228 )
+nodes/fragment/0/position = Vector2( 500, 60 )
+nodes/fragment/2/node = SubResource( 13 )
+nodes/fragment/2/position = Vector2( 200, 120 )
+nodes/fragment/connections = PoolIntArray( 2, 1, 0, 1 )
+nodes/light/0/position = Vector2( 500, 140 )
+
+[sub_resource type="ShaderMaterial" id=15]
+shader = SubResource( 14 )
+shader_param/ColorUniform = Color( 0, 0, 0, 0.145098 )
+
+[sub_resource type="NativeScript" id=16]
+
+[sub_resource type="SpatialMaterial" id=17]
+next_pass = SubResource( 15 )
+flags_transparent = true
+albedo_color = Color( 0, 0, 0, 0.109804 )
 albedo_texture = ExtResource( 12 )
+metallic = 1.0
+roughness = 0.0
+script = SubResource( 16 )
+
+[sub_resource type="InputEventKey" id=18]
+scancode = 26
+
+[sub_resource type="ShortCut" id=19]
+shortcut = SubResource( 18 )
+
+[sub_resource type="InputEventKey" id=20]
+scancode = 4
+
+[sub_resource type="ShortCut" id=21]
+shortcut = SubResource( 20 )
+
+[sub_resource type="ButtonGroup" id=23]
+resource_name = "camera_move"
+
+[sub_resource type="ButtonGroup" id=24]
+resource_name = "camera_move"
+
+[sub_resource type="ButtonGroup" id=25]
+resource_name = "camera_move"
 
 [node name="main_scene" type="Spatial"]
 
@@ -74,33 +150,35 @@ light_color = Color( 1, 0.956863, 0.839216, 1 )
 shadow_enabled = true
 shadow_contact = 1.2
 shadow_reverse_cull_face = true
+script = ExtResource( 18 )
 
 [node name="Camera" type="Camera" parent="."]
-transform = Transform( -0.966912, 0.127554, -0.22093, 0, 0.866025, 0.5, 0.255108, 0.483456, -0.837371, 0.768934, 8.46898, -8.44024 )
-environment = SubResource( 13 )
+transform = Transform( -0.966913, 0.127554, -0.22093, 0, 0.866025, 0.5, 0.255108, 0.483456, -0.837371, -9.04482, 8.46898, -8.44024 )
+environment = SubResource( 2 )
 fov = 60.0
 near = 0.3
 far = 1000.0
+script = ExtResource( 17 )
 
 [node name="grass" type="MeshInstance" parent="."]
-transform = Transform( 18, 0, 0, 0, 1, 0, 0, 0, 18, 1.22145, 0, 0.0736623 )
-mesh = SubResource( 1 )
-material/0 = SubResource( 2 )
+transform = Transform( 18, 0, 0, 0, 1, 0, 0, 0, 18, 1.20197, 0, 0.0982347 )
+mesh = SubResource( 3 )
+material/0 = SubResource( 4 )
 __meta__ = {
 "_editor_description_": ""
 }
 
 [node name="floor1" type="MeshInstance" parent="."]
 transform = Transform( 1.8, 0, 0, 0, 1, 0, 0, 0, 1.8, 1.896, 0.00999809, 1.86746 )
-mesh = SubResource( 3 )
-material/0 = SubResource( 4 )
+mesh = SubResource( 5 )
+material/0 = SubResource( 6 )
 
 [node name="DiningTable2" parent="." instance=ExtResource( 3 )]
 transform = Transform( -1.62921e-07, 0, 1, 0, 1, 0, -1, 0, -1.62921e-07, -3.14345, 0, -2.713 )
 
 [node name="road" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 7.1, 1.91549, 0.01, 10.8107 )
-mesh = SubResource( 5 )
+mesh = SubResource( 7 )
 material/0 = SubResource( 8 )
 
 [node name="DoorDouble2" parent="." instance=ExtResource( 4 )]
@@ -114,8 +192,8 @@ transform = Transform( -1.62921e-07, 0, 1, 0, 1, 0, -1, 0, -1.62921e-07, -3.9424
 
 [node name="floor2" type="MeshInstance" parent="."]
 transform = Transform( 4.5, 0, 0, 0, 1, 0, 0, 0, 2.8, -0.81421, 0.00999952, -2.71255 )
-mesh = SubResource( 6 )
-material/0 = SubResource( 7 )
+mesh = SubResource( 9 )
+material/0 = SubResource( 10 )
 
 [node name="Carpet" parent="." instance=ExtResource( 1 )]
 transform = Transform( 3.5, 0, 0, 0, 1, 0, 0, 0, 1.7, -0.784091, 0.02, -2.713 )
@@ -130,77 +208,263 @@ transform = Transform( 1.19249e-08, 0, -1, 0, 1, 0, 1, 0, 1.19249e-08, -2.50141,
 transform = Transform( -1, 0, -3.25841e-07, 0, 1, 0, 3.25841e-07, 0, -1, -0.773017, 0, -0.444403 )
 
 [node name="wall1" type="MeshInstance" parent="."]
-transform = Transform( 0.01, 0, 0, 0, 1.5, 0, 0, 0, 2.5, 0.0777121, 1.5, 1.22887 )
-mesh = SubResource( 9 )
+transform = Transform( 0.01, 0, 0, 0, 1.5, 0, 0, 0, 1, 0.0777121, 1.5, -0.363912 )
+mesh = SubResource( 11 )
+material/0 = null
+
+[node name="wall9" type="MeshInstance" parent="."]
+transform = Transform( 0.01, 0, 0, 0, 1.5, 0, 0, 0, 0.6, 0.0777121, 1.5, 3.07076 )
+mesh = SubResource( 11 )
 material/0 = null
 
 [node name="wall4" type="MeshInstance" parent="."]
 transform = Transform( -1.62921e-09, 0, 1.8, 0, 1.5, 0, -0.01, 0, -2.93257e-07, 1.87026, 1.5, 3.64834 )
-mesh = SubResource( 9 )
+mesh = SubResource( 11 )
 material/0 = null
 
 [node name="wall6" type="MeshInstance" parent="."]
-transform = Transform( -1.62921e-09, 0, 2.7, 0, 1.5, 0, -0.01, 0, -4.39886e-07, -2.65273, 1.5, 0.0663843 )
-mesh = SubResource( 9 )
+transform = Transform( -1.62921e-09, 0, 0.75, 0, 1.5, 0, -0.01, 0, -1.22191e-07, -4.56896, 1.5, 0.0663843 )
+mesh = SubResource( 11 )
+material/0 = null
+
+[node name="wall8" type="MeshInstance" parent="."]
+transform = Transform( -1.62921e-09, 0, 0.95, 0, 1.5, 0, -0.01, 0, -1.54775e-07, -0.915006, 1.5, 0.0663843 )
+mesh = SubResource( 11 )
 material/0 = null
 
 [node name="wall5" type="MeshInstance" parent="."]
-transform = Transform( -1.62921e-09, 0, 4.5, 0, 1.5, 0, -0.01, 0, -7.33143e-07, -0.827177, 1.5, -5.55258 )
-mesh = SubResource( 9 )
+transform = Transform( -1.62921e-09, 0, 0.4, 0, 1.5, 0, -0.01, 0, -6.51683e-08, 0.641663, 1.5, -5.55258 )
+mesh = SubResource( 11 )
+material/0 = null
+
+[node name="wall12" type="MeshInstance" parent="."]
+transform = Transform( -1.62921e-09, 0, 0.4, 0, 1.5, 0, -0.01, 0, -6.51683e-08, -2.00718, 1.5, -5.55258 )
+mesh = SubResource( 11 )
+material/0 = null
+
+[node name="wall13" type="MeshInstance" parent="."]
+transform = Transform( -1.62921e-09, 0, 0.5, 0, 1.5, 0, -0.01, 0, -8.14603e-08, -4.83354, 1.5, -5.55258 )
+mesh = SubResource( 11 )
+material/0 = null
+
+[node name="wall14" type="MeshInstance" parent="."]
+transform = Transform( -1.62921e-09, 0, 0.35, 0, 1.5, 0, -0.01, 0, -5.70222e-08, 3.28111, 1.5, -5.55258 )
+mesh = SubResource( 11 )
 material/0 = null
 
 [node name="wall2" type="MeshInstance" parent="."]
-transform = Transform( 0.01, 0, 0, 0, 1.5, 0, 0, 0, 2.8, -5.321, 1.5, -2.713 )
-mesh = SubResource( 9 )
+transform = Transform( 0.01, 0, 0, 0, 1.5, 0, 0, 0, 0.8, -5.321, 1.5, -0.741243 )
+mesh = SubResource( 11 )
+material/0 = null
+
+[node name="wall7" type="MeshInstance" parent="."]
+transform = Transform( 0.01, 0, 0, 0, 1.5, 0, 0, 0, 1.05, -5.321, 1.5, -4.53108 )
+mesh = SubResource( 11 )
 material/0 = null
 
 [node name="wall3" type="MeshInstance" parent="."]
-transform = Transform( 0.01, 0, 0, 0, 1.5, 0, 0, 0, 4.6, 3.64207, 1.45199, -0.91828 )
-mesh = SubResource( 9 )
-material/0 = SubResource( 10 )
+transform = Transform( 0.01, 0, 0, 0, 1.5, 0, 0, 0, 1.1, 3.64207, 1.45199, -0.476088 )
+mesh = SubResource( 11 )
+material/0 = SubResource( 12 )
+
+[node name="wall11" type="MeshInstance" parent="."]
+transform = Transform( 0.01, 0, 0, 0, 1.5, 0, 0, 0, 1.1, 3.64207, 1.45199, -4.51387 )
+mesh = SubResource( 11 )
+material/0 = SubResource( 12 )
+
+[node name="wall10" type="MeshInstance" parent="."]
+transform = Transform( 0.01, 0, 0, 0, 1.5, 0, 0, 0, 0.5, 3.64207, 1.45199, 3.13198 )
+mesh = SubResource( 11 )
+material/0 = SubResource( 12 )
 
 [node name="window2_3x2" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.33138, -2.38419e-07, -5.57428 )
 mesh = ExtResource( 13 )
-material/0 = SubResource( 11 )
+material/0 = SubResource( 17 )
 
 [node name="window2_3x4" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.686304, -2.38419e-07, -5.57428 )
 mesh = ExtResource( 13 )
-material/0 = SubResource( 11 )
+material/0 = SubResource( 17 )
 
 [node name="window2_3x5" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.98614, -2.38419e-07, -5.57428 )
 mesh = ExtResource( 13 )
-material/0 = SubResource( 11 )
+material/0 = SubResource( 17 )
 
 [node name="window2_3x3" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.86073, -2.38419e-07, 0.0702536 )
 mesh = ExtResource( 13 )
-material/0 = SubResource( 11 )
+material/0 = SubResource( 17 )
 
 [node name="window2_3x6" type="MeshInstance" parent="."]
-transform = Transform( -1.62921e-07, 0, 1, 0, 1, 0, -1, 0, -1.62921e-07, 3.63138, -2.38419e-07, 1.57595 )
+transform = Transform( -1.62921e-07, 0, 1, 0, 1, 0, -1, 0, -1.62921e-07, 3.63138, -2.38419e-07, 1.58406 )
 mesh = ExtResource( 13 )
-material/0 = SubResource( 11 )
+material/0 = SubResource( 17 )
 
 [node name="window2_3x9" type="MeshInstance" parent="."]
 transform = Transform( -1.62921e-07, 0, 1, 0, 1, 0, -1, 0, -1.62921e-07, 0.0651281, -2.38419e-07, 1.57595 )
 mesh = ExtResource( 13 )
-material/0 = SubResource( 11 )
+material/0 = SubResource( 17 )
 
 [node name="window2_3x7" type="MeshInstance" parent="."]
 transform = Transform( -1.62921e-07, 0, 1, 0, 1, 0, -1, 0, -1.62921e-07, 3.63138, -2.38419e-07, -2.49619 )
 mesh = ExtResource( 13 )
-material/0 = SubResource( 11 )
+material/0 = SubResource( 17 )
 
-[node name="window2_3x8" type="MeshInstance" parent="."]
-transform = Transform( -1.62921e-07, 0, 1, 0, 1, 0, -1, 0, -1.62921e-07, -5.32023, -2.38419e-07, -2.49619 )
+[node name="window2_3x10" type="MeshInstance" parent="."]
+transform = Transform( -1.62921e-07, 0, 1, 0, 1, 0, -1, 0, -1.62921e-07, -5.32905, -2.38419e-07, -2.49619 )
 mesh = ExtResource( 13 )
-material/0 = SubResource( 11 )
+material/0 = SubResource( 17 )
 
 [node name="ChestOfDraws" parent="." instance=ExtResource( 11 )]
 transform = Transform( 1.19249e-08, 0, -1, 0, 1, 0, 1, 0, 1.19249e-08, 3.21225, 0, -2.46308 )
 
 [node name="Lamp" parent="." instance=ExtResource( 14 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 3.19203, 0.92856, -2.46195 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -953.0
+margin_bottom = -566.0
+mouse_filter = 2
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+script = ExtResource( 15 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="fps_label" type="Label" parent="CanvasLayer/MarginContainer"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 61.0
+margin_bottom = 24.0
+text = "fps: 000"
+
+[node name="Control" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 2.245
+margin_top = 0.561279
+margin_right = 2.245
+margin_bottom = 0.561279
+mouse_filter = 2
+script = ExtResource( 16 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button5" type="Button" parent="Control"]
+margin_left = 61.552
+margin_top = 465.872
+margin_right = 93.552
+margin_bottom = 495.872
+mouse_default_cursor_shape = 3
+action_mode = 0
+shortcut = SubResource( 19 )
+text = "/\\"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button2" type="Button" parent="Control"]
+margin_left = 25.4017
+margin_top = 499.592
+margin_right = 57.4017
+margin_bottom = 529.592
+shortcut = SubResource( 21 )
+group = SubResource( 23 )
+text = "<"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button3" type="Button" parent="Control"]
+margin_left = 99.9424
+margin_top = 499.966
+margin_right = 131.942
+margin_bottom = 529.966
+group = SubResource( 24 )
+text = ">"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button4" type="Button" parent="Control"]
+margin_left = 62.1102
+margin_top = 535.551
+margin_right = 94.1102
+margin_bottom = 565.551
+group = SubResource( 25 )
+text = "\\/"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button" type="Button" parent="Control"]
+margin_left = 890.929
+margin_top = 459.296
+margin_right = 922.929
+margin_bottom = 489.296
+action_mode = 0
+text = "/\\"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button6" type="Button" parent="Control"]
+margin_left = 853.143
+margin_top = 492.959
+margin_right = 880.143
+margin_bottom = 522.959
+action_mode = 0
+text = "<"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button7" type="Button" parent="Control"]
+margin_left = 930.612
+margin_top = 495.735
+margin_right = 960.612
+margin_bottom = 524.735
+action_mode = 0
+text = ">"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button8" type="Button" parent="Control"]
+margin_left = 891.949
+margin_top = 533.959
+margin_right = 919.949
+margin_bottom = 559.959
+action_mode = 0
+text = "\\/"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="button_down" from="Control/Button5" to="Control" method="_on_Button5_button_down"]
+[connection signal="button_down" from="Control/Button5" to="Camera" method="_on_Button5_button_down"]
+[connection signal="button_up" from="Control/Button5" to="Camera" method="_on_Button5_button_up"]
+[connection signal="button_down" from="Control/Button2" to="Camera" method="_on_Button2_button_down"]
+[connection signal="button_up" from="Control/Button2" to="Camera" method="_on_Button2_button_up"]
+[connection signal="button_down" from="Control/Button3" to="Camera" method="_on_Button3_button_down"]
+[connection signal="button_up" from="Control/Button3" to="Camera" method="_on_Button3_button_up"]
+[connection signal="button_down" from="Control/Button4" to="Camera" method="_on_Button4_button_down"]
+[connection signal="button_up" from="Control/Button4" to="Camera" method="_on_Button4_button_up"]
+[connection signal="button_down" from="Control/Button" to="Camera" method="_on_Button_button_down"]
+[connection signal="button_up" from="Control/Button" to="Camera" method="_on_Button_button_up"]
+[connection signal="button_down" from="Control/Button6" to="Camera" method="_on_Button6_button_down"]
+[connection signal="button_up" from="Control/Button6" to="Camera" method="_on_Button6_button_up"]
+[connection signal="button_down" from="Control/Button7" to="Camera" method="_on_Button7_button_down"]
+[connection signal="button_up" from="Control/Button7" to="Camera" method="_on_Button7_button_up"]
+[connection signal="button_down" from="Control/Button8" to="Camera" method="_on_Button8_button_down"]
+[connection signal="button_up" from="Control/Button8" to="Camera" method="_on_Button8_button_up"]
