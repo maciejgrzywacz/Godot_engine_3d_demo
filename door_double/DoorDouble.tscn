@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://door_double/DoorDouble.fbx" type="PackedScene" id=1]
 [ext_resource path="res://door_double/Doors_TVStand_MAT_AlbedoTransparency.png" type="Texture" id=2]
 [ext_resource path="res://door_double/Doors_TVStand_MAT_Normal.png" type="Texture" id=3]
 [ext_resource path="res://door_double/Doors_TVStand_MAT_MetallicSmoothness.png" type="Texture" id=4]
+[ext_resource path="res://door_doubledoor_opens.tres" type="Animation" id=5]
 
 [sub_resource type="SpatialMaterial" id=1]
 albedo_texture = ExtResource( 2 )
@@ -20,18 +21,32 @@ normal_scale = 1.0
 normal_texture = ExtResource( 3 )
 
 [sub_resource type="Animation" id=3]
-resource_name = "door_opens"
+resource_name = "dooropeninganim"
+length = 4.0
+loop = true
 tracks/0/type = "value"
-tracks/0/path = NodePath("RootNode/DoorDouble/rightDoor:rotation_degrees")
+tracks/0/path = NodePath("RootNode/DoorDouble/rightDoor:translation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PoolRealArray( 0, 1.9, 4 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
-"values": [ Vector3( 0, 0, 0 ) ]
+"values": [ Vector3( 0, 0, 0 ), Vector3( -0.7, 0, 0 ), Vector3( 0, 0, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("RootNode/DoorDouble/leftDoor:translation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 1.9, 4 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, 0 ), Vector3( 0.7, 0, 0 ), Vector3( 0, 0, 0 ) ]
 }
 
 [node name="DoorDouble" instance=ExtResource( 1 )]
@@ -43,4 +58,6 @@ material/0 = SubResource( 1 )
 material/0 = SubResource( 2 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." index="1"]
-anims/door_opens = SubResource( 3 )
+autoplay = "dooropeninganim"
+anims/door_opens = ExtResource( 5 )
+anims/dooropeninganim = SubResource( 3 )
