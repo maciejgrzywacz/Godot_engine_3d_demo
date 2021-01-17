@@ -15,8 +15,11 @@ var down_pressed = false
 var right_pressed = false
 var left_pressed = false
 
+var yaw = deg2rad(200)
+var pitch = deg2rad(-30)
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	set_rotation(Vector3(pitch, yaw, 0))
 	pass # Replace with function body.
 
 
@@ -43,13 +46,19 @@ func _process(delta):
 	var r_speed = 50
 	
 	if up_pressed:
-		rotate_x(deg2rad(r_speed * delta))
+		pitch += deg2rad(r_speed * delta)
+		#rotate_x(deg2rad(r_speed * delta))
 	if down_pressed:
-		rotate_x(deg2rad(-r_speed * delta))
+		pitch -= deg2rad(r_speed * delta)
+		#rotate_x(deg2rad(-r_speed * delta))
 	if left_pressed:
-		rotate_y(deg2rad(r_speed * delta))
+		yaw += deg2rad(r_speed * delta)
+		#rotate_y(deg2rad(r_speed * delta))
 	if right_pressed:
-		rotate_y(deg2rad(-r_speed * delta))
+		yaw -= deg2rad(r_speed * delta)
+		#rotate_y(deg2rad(-r_speed * delta))
+		
+	set_rotation(Vector3(pitch, yaw, 0))
 	
 
 func _on_Button5_button_down():

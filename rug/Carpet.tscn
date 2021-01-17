@@ -3,7 +3,7 @@
 [ext_resource path="res://rug/Carpet.fbx" type="PackedScene" id=1]
 [ext_resource path="res://rug/Rug_Curtains_MAT_AlbedoTransparency.png" type="Texture" id=2]
 [ext_resource path="res://rug/Rug_Curtains_MAT_AmbientOcclusion.png" type="Texture" id=3]
-[ext_resource path="res://rug/Rug_Curtains_MAT_Normal.png" type="Texture" id=4]
+[ext_resource path="res://rug/139680878_782426039017561_2803166025392241496_n.png" type="Texture" id=4]
 [ext_resource path="res://rug/Rug_Curtains_MAT_MetallicSmoothness.png" type="Texture" id=5]
 
 [sub_resource type="SpatialMaterial" id=1]

@@ -25,6 +25,8 @@ sky_horizon_color = Color( 0.737255, 0.811765, 0.929412, 1 )
 [sub_resource type="Environment" id=2]
 background_mode = 2
 background_sky = SubResource( 1 )
+ssao_light_affect = 0.4
+adjustment_saturation = 1.49
 
 [sub_resource type="PlaneMesh" id=3]
 
